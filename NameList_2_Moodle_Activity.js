@@ -133,9 +133,13 @@ namelist.replace(/[ \t,;]+/g, ' ').trim().split('\n').map(line => { const [nimi1
                     // Find the <option> that says "hyväksytty"
                     const hyvOption = Array.from(select.options).find(option => option.text === "Hyväksytty");
                     if (hyvOption) {
-                        // Select the option
-                        select.value = hyvOption.value;
-                        console.log(`Asetettu ${nimi} hyväksytyksi.`);
+                        // If accepted already, no action
+												if (select.value == hyvOption.value) {console.log(`${nimi} on jo ok`);}
+                        else {
+                              //Otherwise approve
+                              select.value = hyvOption.value;
+                              console.log('%cAsetettu ${nimi} hyväksytyksi!', 'color: blue; font-size: 12px; font-weight: bold');
+                              }
                     } else {
                         console.warn(`Oikeaa optiota ei löytynyt nimelle ${nimi}.`);
                     }
