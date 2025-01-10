@@ -51,7 +51,7 @@ arvostelulista.trim().split('\n').forEach(rivi => {
     if (arvosanaNYT == "NULL") {
         selectArvosana.value = arvosanaUUSI.value;
         selectArvosana.dispatchEvent(new Event('change')); //Laukaistaan muutos peppiin
-        console.log(`Opiskelijalle ${NIMI} annettu nyt arvosana ${ARVOSANA}.`);
+        console.log('%cOpiskelijalle ${NIMI} annettu nyt arvosana ${ARVOSANA}!', 'color: blue; font-size: 12px; font-weight: bold');
     } else {
         if (arvosanaNYT === arvosanaUUSI.value) {
         console.log(`Ohitetaan ${NIMI} - syötetty jo`);
