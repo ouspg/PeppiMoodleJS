@@ -138,7 +138,7 @@ namelist.replace(/[ \t,;]+/g, ' ').trim().split('\n').map(line => { const [nimi1
                         else {
                               //Otherwise approve
                               select.value = hyvOption.value;
-                              console.log('%cAsetettu ${nimi} hyväksytyksi!', 'color: blue; font-size: 12px; font-weight: bold');
+                              console.log(`%cAsetettu ${nimi} hyväksytyksi!`, 'color: blue; font-size: 12px; font-weight: bold');
                               }
                     } else {
                         console.warn(`Oikeaa optiota ei löytynyt nimelle ${nimi}.`);
