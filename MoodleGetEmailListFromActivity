@@ -1,0 +1,40 @@
+//
+// Print namelist of a single Moodle activity for easy copypasting to Outlook/Teams
+//
+// Grouped by given grade to activity for easy selection of particular group of students
+
+
+{ //variable scope
+
+// Find grading options:
+const gradingSelect = document.querySelector('select.quickgrade');
+
+if (gradingSelect) {
+    // Get all the <option> elements and map to an array
+    const gradeList = Array.from(gradingSelect.options).map(option => option.text);
+
+    // List students for every grade
+    gradeList.forEach(grade => {
+        console.log(`### ${grade} ###`);
+
+        // Find all <tr> elements containing a <select> with class "quickgrade" and the selected option matches the current grade
+        const rows = Array.from(document.querySelectorAll('tr')).filter(row => {
+            const select = row.querySelector('select.quickgrade');
+            return select && select.options[select.selectedIndex].text === grade; // Check if the selected option matches the current grade
+        });
+
+        // For each matching <tr> <td> with class "c5" --> i.e. the student email from the correct column
+            var nameList = "";
+            rows.forEach(row => {
+            const link = row.querySelector('td.c5');
+            if (link) {
+                // Print the text content of the <a> with a trailing comma
+                nameList += `${link.textContent};\n`;
+            }
+        });
+        console.log(nameList);
+    });
+} else {
+    console.log('No <select> element with class "quickgrade" found.');
+}
+}
