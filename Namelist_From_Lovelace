@@ -1,0 +1,16 @@
+/*
+
+For extracting the names from Lovelace course results, that have no missing points (0 in the missing tasks column), i.e. they have full points.
+
+*/
+
+lista = document.querySelectorAll('td.sticky-left');
+nimilista = ""
+
+lista.forEach(cell => {
+  const pisteet = cell.nextElementSibling;
+  const puuttuvat = pisteet.nextElementSibling;
+  if (pisteet && pisteet.tagName.toLowerCase() === 'td' && puuttuvat && puuttuvat.tagName.toLowerCase() === 'td' && puuttuvat.textContent == '0') {
+    nimilista += cell.textContent + '\n';
+  }
+}); console.log(nimilista)
