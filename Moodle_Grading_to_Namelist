@@ -1,0 +1,26 @@
+//Go to Course Grading page and run the following:
+
+//Select user rows
+var rivit = Array.from(document.querySelectorAll("tr.userrow"));
+
+//Find the student name and the final column value (should be grade from 1 to 5!!!)
+
+var opiskelijat = rivit.map(rivi => {
+    const nimi = rivi.querySelector("th a");
+    const arvosana = rivi.querySelector("td:last-child input");
+    
+    return {
+        nimi: nimi ? nimi.innerHTML.replace(/<[^>]*>.*?<\/[^>]*>|<img[^>]*>/g, '').trim() : '',
+        arvosana: arvosana ? parseInt(arvosana.value.replace(',', '.').trim(), 10) || 0 : 0
+    };
+}).filter(item => item.arvosana !== '' && item.arvosana !== 0);;
+
+// The filter should remove students with grade 0 or empty
+
+//Make the format that works for Peppi input (Namelist_2_Peppi_Grading_Page)
+
+var peppilistaus = opiskelijat.map(opiskelija => {
+    return `${opiskelija.arvosana};${opiskelija.nimi}`;
+}).join('\n');
+//Print to console for copypasting to Peppi
+console.log(peppilistaus);
