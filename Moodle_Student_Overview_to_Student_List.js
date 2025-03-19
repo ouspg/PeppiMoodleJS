@@ -12,7 +12,7 @@ var raakanimet = rivit.map(rivi => {
     return nimiA ? nimiA.innerHTML : ''; //Palautetaan tyhjä jos ei löydy sopivaa elementtiä
 });
 // Clean up the span field and add grade for Peppi, should obviously incorporate grading for courses that grade 1-5 instead of pass/fail
-var nimet = raakanimet.map(content => content.replace(/<span[^>]*>.*?<\/span>/g, '').trim());
+var nimet = raakanimet.map(content => content.replace(/<[^>]*>.*?<\/[^>]*>|<[^>]*>/g, '').trim());
 var peppinimet = nimet.map(nimi => {
     return `HYV/PASS;${nimi}`;
 }).join('\n');
