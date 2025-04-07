@@ -7,11 +7,11 @@ var rivit = Array.from(document.querySelectorAll("tr.userrow"));
 
 var opiskelijat = rivit.map(rivi => {
     const nimi = rivi.querySelector("th a");
-    const arvosana = rivi.querySelector("td:last-child input");
+    const arvosana = rivi.querySelector("td:last-child span");
     
     return {
         nimi: nimi ? nimi.innerHTML.replace(/<[^>]*>.*?<\/[^>]*>|<img[^>]*>/g, '').trim() : '',
-        arvosana: arvosana ? parseInt(arvosana.value.replace(',', '.').trim(), 10) || 0 : 0
+        arvosana: arvosana ? parseInt(arvosana.innerHTML.replace(',', '.').trim(), 10) || 0 : 0
     };
 }).filter(item => item.arvosana !== '' && item.arvosana !== 0);;
 
