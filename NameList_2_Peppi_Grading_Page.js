@@ -2,6 +2,87 @@
 //Paste the following to JS console:
 //Note popup windows need to be enabled
 
+{
+/**
+ * AsyncLock
+ * Locking to control throttling of Peppi calls
+ * AI-generated code
+ */
+
+class AsyncLock {
+  constructor() {
+    this._lock = Promise.resolve();  // initially resolved
+  }
+
+  // This method returns a promise that resolves once the lock is available
+  async get() {
+    let unlockNext;
+    const willLock = new Promise(resolve => {
+      unlockNext = resolve; // save the resolve function to unlock later
+    });
+
+    // Create a promise chain to ensure that each `get` waits for the previous one
+    const willUnlock = this._lock.then(() => unlockNext);
+
+    // Update the lock to the new lock, preventing other calls from executing
+    this._lock = willLock;
+
+    return willUnlock;
+  }
+
+  // Method to release the lock
+  release() {
+    this._lock.resolve();  // resolving the lock allows the next operation to proceed
+  }
+}
+
+var peppiLukko = new AsyncLock();
+    
+/**
+ * waitForPeppi
+ * Wait until a specific attribute is set. Edited, based on AI given code
+ * @param {DOM object} element which element to wait for - student tr probably
+ * @param {string} attributeName which attribute to wait for - data-accomplishment-id probably
+ */
+
+function waitForPeppi(element, attributeName) {
+    const timeoutMs = 5000;
+    const pollInterval = 50;
+    
+    return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const check = () => {
+      const attr = element.getAttribute(attributeName);
+      if (attr && attr.trim() !== "") {
+        resolve(attr);
+      } else if (Date.now() - start >= timeoutMs) {
+        resolve(null);  // or reject if preferred
+      } else {
+        setTimeout(check, pollInterval);
+      }
+    };
+    check();
+  });
+}
+
+/**
+ * Grade student respecting Peppi throttling
+ * @param {DOM object} opiskelija
+ * @param {DOM object} arvosana
+ * @param {string} uusiarvosana
+ */
+
+async function arvosteleOpiskelija(opiskelija,arvosana,uusiarvosana,uusiarvosanaValue)
+    {
+        const avaa = await peppiLukko.get();
+        arvosana.value = uusiarvosanaValue;
+        arvosana.dispatchEvent(new Event('change')); //Laukaistaan muutos peppiin
+        await waitForPeppi(opiskelija,"data-accomplishment-id"); //Ilman kunnon odotusta sivu ei toimi...
+        console.log(`%cOpiskelijalle ${opiskelija.dataset.studentName} annettu nyt arvosana ${uusiarvosana}!`, 'color: blue; font-size: 12px; font-weight: bold');
+        avaa();
+    }
+
+
 /**
  * Grade and trigger grading action
  * @param {string} arvostelulista - The list of names and grades
@@ -46,18 +127,17 @@ arvostelulista.trim().split('\n').forEach(rivi => {
         console.warn(`Arvosanaa ${ARVOSANA} opiskelijalle ${NIMI} ei löydy!`);
         return;
     }
-
+    //console.log(opiskelija.dataset.accomplishmentId);
     // Jos ei arvosanaa aiemmin, valitaan uusi
     if (arvosanaNYT == "NULL") {
-        selectArvosana.value = arvosanaUUSI.value;
-        selectArvosana.dispatchEvent(new Event('change')); //Laukaistaan muutos peppiin
-        console.log(`%cOpiskelijalle ${NIMI} annettu nyt arvosana ${ARVOSANA}!`, 'color: blue; font-size: 12px; font-weight: bold');
+        arvosteleOpiskelija(opiskelija,selectArvosana,ARVOSANA,arvosanaUUSI.value)
     } else {
         if (arvosanaNYT === arvosanaUUSI.value) {
         console.log(`Ohitetaan ${NIMI} - syötetty jo`);
     } else {
         console.warn(`Opiskelijalla ${NIMI} on tällä hetkellä eri arvosana kuin ${ARVOSANA}. Tarkista!`);
-    }}
+    }
+    }
 });
 }
 
@@ -83,3 +163,4 @@ arvostelulista.trim().split('\n').forEach(rivi => {
         </body>
         </html>
     `);
+}
