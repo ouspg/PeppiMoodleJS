@@ -124,11 +124,8 @@ namelist.replace(/[ \t,;]+/g, ' ').trim().split('\n').map(line => { const [nimi1
         // Find the parent TR
         const emoTR = anchor.closest('tr');
         if (emoTR) {
-            // Find the TD with class "c7"
-            const arviointiTD = emoTR.querySelector('td.c7');
-            if (arviointiTD) {
             // Find the select 
-                const select = arviointiTD.querySelector('select');
+                const select = emoTR.querySelector('select.quickgrade');
                 if (select) {
                     // Find the <option> that says "hyväksytty"
                     const hyvOption = Array.from(select.options).find(option => option.text === "Hyväksytty");
@@ -146,9 +143,6 @@ namelist.replace(/[ \t,;]+/g, ' ').trim().split('\n').map(line => { const [nimi1
                 } else {
                     console.warn(`TD:n sisältä ei löytynyt <select>-tagia nimelle ${nimi}.`);
                 }
-            } else {
-                console.warn(`c7-luokalla varustettua <td>-tagia ei löytynyt nimelle ${nimi}.`);
-            }
         } else {
             console.warn(`Nimelle ${nimi} ei löytynyt TR-tagia ylempää DOM:sta?`);
         }
